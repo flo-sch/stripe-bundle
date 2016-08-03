@@ -1,0 +1,33 @@
+{
+    "name": "flosch/stripe-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony 3 bundle to easily integrate Stripe's webpayment SDK into a Symfony project.",
+    "keywords": [
+        "bundle",
+        "symfony",
+        "stripe",
+        "php",
+        "payment",
+        "webpayment"
+    ],
+    "homepage": "https://github.com/Flo-Schield-Bobby/FsbProxyBundle",
+    "license":  "MIT",
+    "authors": [
+        {
+            "name":     "Florent Schildknecht",
+            "email":    "florent.schildknecht@gmail.com",
+            "homepage": "http://floschild.me"
+        }
+    ],
+    "require": {
+        "symfony/symfony": "~3.0",
+        "stripe/stripe-php": "^3.19",
+        "ocramius/proxy-manager": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flosch\\Bundle\\StripeBundle\\": ""
+        }
+    },
+    "minimum-stability": "dev"
+}

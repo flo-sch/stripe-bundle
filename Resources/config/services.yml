@@ -1,0 +1,8 @@
+parameters:
+    flosch.stripe.client.class: Flosch\Bundle\StripeBundle\Stripe\StripeClient
+
+services:
+    flosch.stripe.client:
+        class: "%flosch.stripe.client.class%"
+        arguments: ["%stripe_api_key%"]
+        lazy: true
