@@ -69,5 +69,5 @@ $stripeClient->subscribeCustomerToPlan($planId, $paymentToken, $customerEmail);
  * $applicationFee (int)        : The amount of the application fee (in cents), default to 0
  * $chargeDescription (string)  : An optional charge description
  */
-$stripeClient->createCharge(int $chargeAmount, string $chargeCurrency, string $paymentToken, string $stripeAccountId, int $applicationFee = 0, string $chargeDescription = '');
+$stripeClient->createCharge($chargeAmount, $chargeCurrency, $paymentToken, $stripeAccountId, $applicationFee, $chargeDescription);
 ```

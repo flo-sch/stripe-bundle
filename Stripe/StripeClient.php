@@ -69,7 +69,7 @@ class StripeClient extends Stripe
             'currency'          => $chargeCurrency,
             'source'            => $paymentToken,
             'application_fee'   => $applicationFee,
-            'description'       => $description
+            'description'       => $chargeDescription
         ], [
             'stripe_account'    => $stripeAccountId
         ]);
