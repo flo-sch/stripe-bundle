@@ -74,17 +74,23 @@ class StripeClient extends Stripe
      */
     public function subscribeCustomerToPlan(string $planId, string $paymentToken, string $customerEmail, string $couponId = null)
     {
-        $data = [
-            'plan'      => $planId,
+        $customer = Customer::create([
             'source'    => $paymentToken,
             'email'     => $customerEmail
+        ]);
+
+        $data = [
+            'customer' => $customer->id,
+            'plan' => $planId,
         ];
 
         if ($couponId) {
             $data['coupon'] = $couponId;
         }
 
-        return Customer::create($data);
+        $subscription = Subscription::create($data);
+
+        return $customer;
     }
 
     /**
