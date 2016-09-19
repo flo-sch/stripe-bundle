@@ -21,7 +21,7 @@
     ],
     "require": {
         "symfony/symfony": "~3.0",
-        "stripe/stripe-php": "^3.19",
+        "stripe/stripe-php": "~3.23",
         "ocramius/proxy-manager": "^2.0"
     },
     "autoload": {

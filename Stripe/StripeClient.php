@@ -3,8 +3,10 @@
 namespace Flosch\Bundle\StripeBundle\Stripe;
 
 use Stripe\Stripe,
+    Stripe\Charge,
     Stripe\Customer,
-    Stripe\Charge;
+    Stripe\Coupon,
+    Stripe\Plan;
 
 /**
  * An extension of the Stripe PHP SDK, including an API key parameter to automatically authenticate.
@@ -21,6 +23,40 @@ class StripeClient extends Stripe
     }
 
     /**
+     * Retrieve a Coupon instance by its ID
+     *
+     * @throws HttpException:
+     *     - If the couponId is invalid (the coupon does not exists...)
+     *
+     * @see https://stripe.com/docs/api#coupons
+     *
+     * @param string $couponId: The coupon ID
+     *
+     * @return Coupon
+     */
+    public function retrieveCoupon(string $couponId)
+    {
+        return Coupon::retrieve($couponId);
+    }
+
+    /**
+     * Retrieve a Plan instance by its ID
+     *
+     * @throws HttpException:
+     *     - If the planId is invalid (the plan does not exists...)
+     *
+     * @see https://stripe.com/docs/subscriptions/tutorial#create-subscription
+     *
+     * @param string $planId: The plan ID
+     *
+     * @return Plan
+     */
+    public function retrievePlan(string $planId)
+    {
+        return Plan::retrieve($planId);
+    }
+
+    /**
      * Associate a new Customer object to an existing Plan.
      *
      * @throws HttpException:
@@ -32,16 +68,23 @@ class StripeClient extends Stripe
      * @param string $planId: The plan ID as defined in your Stripe dashboard
      * @param string $paymentToken: The payment token returned by the payment form (Stripe.js)
      * @param string $customerEmail: The customer email
+     * @param string|null $couponId: An optional coupon ID
      *
      * @return Customer
      */
-    public function subscribeCustomerToPlan(string $planId, string $paymentToken, string $customerEmail)
+    public function subscribeCustomerToPlan(string $planId, string $paymentToken, string $customerEmail, string $couponId = null)
     {
-        return Customer::create([
+        $data = [
             'plan'      => $planId,
             'source'    => $paymentToken,
             'email'     => $customerEmail
-        ]);
+        ];
+
+        if ($couponId) {
+            $data['coupon'] = $couponId;
+        }
+
+        return Customer::create($data);
     }
 
     /**

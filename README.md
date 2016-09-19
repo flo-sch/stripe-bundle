@@ -45,7 +45,25 @@ Plus, it will automatically be authenticated with your Stripe API Key, which you
 
 ### Helpers
 
-The StripeClient currently offers two helper methods :
+The StripeClient currently offers four helper methods :
+
+###### Retrieve a Coupon by its ID
+
+``` php
+/**
+ * $planId (string)         : The existing Coupon ID (the one you define in the Stripe dashboard)
+ */
+$stripeClient->retrieveCoupon($planId);
+```
+
+###### Retrieve a Plan by its ID
+
+``` php
+/**
+ * $planId (string)         : The existing Plan ID (the one you define in the Stripe dashboard)
+ */
+$stripeClient->retrievePlan($planId);
+```
 
 ###### Subscribe customer to an existing plan
 
@@ -54,8 +72,9 @@ The StripeClient currently offers two helper methods :
  * $planId (string)         : The existing Plan ID (the one you define in the Stripe dashboard)
  * $paymentToken (string)   : The payment token obtained using the Stripe.js library
  * $customerEmail (string)  : The customer e-mail address
+ * $couponId (string|null)  : An optional coupon ID
  */
-$stripeClient->subscribeCustomerToPlan($planId, $paymentToken, $customerEmail);
+$stripeClient->subscribeCustomerToPlan($planId, $paymentToken, $customerEmail, $couponId);
 ```
 
 ###### Charge a connected Stripe account
