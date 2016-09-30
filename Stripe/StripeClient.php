@@ -6,7 +6,8 @@ use Stripe\Stripe,
     Stripe\Charge,
     Stripe\Customer,
     Stripe\Coupon,
-    Stripe\Plan;
+    Stripe\Plan,
+    Stripe\Subscription;
 
 /**
  * An extension of the Stripe PHP SDK, including an API key parameter to automatically authenticate.
