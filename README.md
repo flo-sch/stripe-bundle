@@ -90,3 +90,18 @@ $stripeClient->subscribeCustomerToPlan($planId, $paymentToken, $customerEmail, $
  */
 $stripeClient->createCharge($chargeAmount, $chargeCurrency, $paymentToken, $stripeAccountId, $applicationFee, $chargeDescription);
 ```
+
+
+###### Refund a Charge
+
+``` php
+/**
+ * $chargeId (string)           : The Stripe charge ID (returned by Stripe when you create a charge)
+ * $refundAmount (int)          : The charge amount in cents (if null, the whole charge amount will be refunded)
+ * $metadata (array)            : optionnal additional informations about the refund
+ * $reason (string)             : The reason of the refund, either "requested_by_customer", "duplicate" or "fraudulent"
+ * $refundApplicationFee (bool) : Wether the application_fee should be refunded aswell.
+ * $reverseTransfer (bool)      : Wether the transfer should be reversed
+ */
+$stripeClient->refundCharge($chargeId, $refundAmount, $metadata, $reason, $refundApplicationFee, $reverseTransfer);
+```
