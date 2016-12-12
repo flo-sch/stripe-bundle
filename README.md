@@ -77,16 +77,16 @@ $stripeClient->retrievePlan($planId);
 $stripeClient->subscribeCustomerToPlan($planId, $paymentToken, $customerEmail, $couponId);
 ```
 
-###### Charge a connected Stripe account
+###### Create a charge (to a platform, or a connected Stripe account)
 
 ``` php
 /**
- * $chargeAmount (int)          : The charge amount in cents, for instance 1000 for 10.00 (of the currency)
- * $chargeCurrency (string)     : The charge currency (for instance, "eur")
- * $paymentToken (string)       : The payment token obtained using the Stripe.js library
- * $stripeAccountId (string)    : The connected string account ID
- * $applicationFee (int)        : The amount of the application fee (in cents), default to 0
- * $chargeDescription (string)  : An optional charge description
+ * $chargeAmount (int)              : The charge amount in cents, for instance 1000 for 10.00 (of the currency)
+ * $chargeCurrency (string)         : The charge currency (for instance, "eur")
+ * $paymentToken (string)           : The payment token obtained using the Stripe.js library
+ * $stripeAccountId (string|null)   : (optional) The connected string account ID, default null (--> charge to the platform)
+ * $applicationFee (int)            : The amount of the application fee (in cents), default to 0
+ * $chargeDescription (string)      : (optional) The charge description for the customer
  */
 $stripeClient->createCharge($chargeAmount, $chargeCurrency, $paymentToken, $stripeAccountId, $applicationFee, $chargeDescription);
 ```
