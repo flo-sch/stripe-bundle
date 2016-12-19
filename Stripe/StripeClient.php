@@ -74,7 +74,7 @@ class StripeClient extends Stripe
      *
      * @return Customer
      */
-    public function subscribeCustomerToPlan(string $planId, string $paymentToken, string $customerEmail, string $couponId = null)
+    public function subscribeCustomerToPlan($planId, $paymentToken, $customerEmail, $couponId = null)
     {
         $customer = Customer::create([
             'source'    => $paymentToken,
@@ -112,7 +112,7 @@ class StripeClient extends Stripe
      *
      * @return Charge
      */
-    public function createCharge(int $chargeAmount, string $chargeCurrency, string $paymentToken, string $stripeAccountId = null, int $applicationFee = 0, string $chargeDescription = '')
+    public function createCharge($chargeAmount, $chargeCurrency, $paymentToken, $stripeAccountId = null, $applicationFee = 0, $chargeDescription = '')
     {
         $connectedAccountOptions = [];
 
@@ -147,18 +147,18 @@ class StripeClient extends Stripe
      *
      * @return Refund
      */
-    public function refundCharge(string $chargeId, int $refundAmount = null, array $metadata = null, string $reason = 'requested_by_customer', bool $refundApplicationFee = true, bool $reverseTransfer = false)
+    public function refundCharge($chargeId, $refundAmount = null, $metadata = [], $reason = 'requested_by_customer', $refundApplicationFee = true, $reverseTransfer = false)
     {
         $data = [
             'charge'                    => $chargeId,
             'metadata'                  => $metadata,
             'reason'                    => $reason,
-            'refund_application_fee'    => $refundApplicationFee,
-            'reverse_transfer'          => $reverseTransfer
+            'refund_application_fee'    => (bool) $refundApplicationFee,
+            'reverse_transfer'          => (bool) $reverseTransfer
         ];
 
         if ($refundAmount) {
-            $data['amount'] = $refundAmount;
+            $data['amount'] = intval($refundAmount);
         }
 
         return Refund::create($data);
