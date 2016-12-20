@@ -114,19 +114,24 @@ class StripeClient extends Stripe
      */
     public function createCharge($chargeAmount, $chargeCurrency, $paymentToken, $stripeAccountId = null, $applicationFee = 0, $chargeDescription = '')
     {
+        $chargeOptions = [
+            'amount'            => $chargeAmount,
+            'currency'          => $chargeCurrency,
+            'source'            => $paymentToken,
+            'description'       => $chargeDescription
+        ];
+
+        if ($applicationFee && intval($applicationFee) > 0) {
+            $chargeOptions['application_fee'] = intval($applicationFee);
+        }
+
         $connectedAccountOptions = [];
 
         if ($stripeAccountId) {
             $connectedAccountOptions['stripe_account'] = $stripeAccountId;
         }
 
-        return Charge::create([
-            'amount'            => $chargeAmount,
-            'currency'          => $chargeCurrency,
-            'source'            => $paymentToken,
-            'application_fee'   => $applicationFee,
-            'description'       => $chargeDescription
-        ], $connectedAccountOptions);
+        return Charge::create($chargeOptions, $connectedAccountOptions);
     }
 
     /**
