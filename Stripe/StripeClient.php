@@ -36,7 +36,7 @@ class StripeClient extends Stripe
      *
      * @return Coupon
      */
-    public function retrieveCoupon(string $couponId)
+    public function retrieveCoupon($couponId)
     {
         return Coupon::retrieve($couponId);
     }
@@ -53,7 +53,7 @@ class StripeClient extends Stripe
      *
      * @return Plan
      */
-    public function retrievePlan(string $planId)
+    public function retrievePlan($planId)
     {
         return Plan::retrieve($planId);
     }
