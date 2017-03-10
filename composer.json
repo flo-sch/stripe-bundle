@@ -10,7 +10,7 @@
         "payment",
         "webpayment"
     ],
-    "homepage": "https://github.com/Flo-Schield-Bobby/FsbProxyBundle",
+    "homepage": "https://github.com/flo-sch/stripe-bundle.git",
     "license":  "MIT",
     "authors": [
         {

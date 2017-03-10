@@ -96,29 +96,93 @@ class StripeClient extends Stripe
     }
 
     /**
-     * Create a new Charge from a payment token, to a connected stripe account.
+     * Create a new Charge from a payment token, to an optional connected stripe account, with an optional application fee.
      *
      * @throws HttpException:
      *     - If the payment token is invalid (payment failed)
      *
-     * @see https://stripe.com/docs/subscriptions/tutorial#create-subscription
+     * @see https://stripe.com/docs/charges
      *
      * @param int    $chargeAmount: The charge amount in cents
      * @param string $chargeCurrency: The charge currency to use
      * @param string $paymentToken: The payment token returned by the payment form (Stripe.js)
      * @param string $stripeAccountId: The connected stripe account ID
-     * @param int    $applicationFee: The fee taken by the platform will take, in cents
+     * @param int    $applicationFee: The fee taken by the platform, in cents
      * @param string $description: An optional charge description
+     * @param array  $metadata: An optional array of metadatas
      *
      * @return Charge
      */
-    public function createCharge($chargeAmount, $chargeCurrency, $paymentToken, $stripeAccountId = null, $applicationFee = 0, $chargeDescription = '')
+    public function createCharge($chargeAmount, $chargeCurrency, $paymentToken, $stripeAccountId = null, $applicationFee = 0, $chargeDescription = '', $chargeMetadata = [])
     {
         $chargeOptions = [
             'amount'            => $chargeAmount,
             'currency'          => $chargeCurrency,
             'source'            => $paymentToken,
-            'description'       => $chargeDescription
+            'description'       => $chargeDescription,
+            'metadata'          => $chargeMetadata
+        ];
+
+        if ($applicationFee && intval($applicationFee) > 0) {
+            $chargeOptions['application_fee'] = intval($applicationFee);
+        }
+
+        $connectedAccountOptions = [];
+
+        if ($stripeAccountId) {
+            $connectedAccountOptions['stripe_account'] = $stripeAccountId;
+        }
+
+        return Charge::create($chargeOptions, $connectedAccountOptions);
+    }
+
+    /**
+     * Create a new Charge from a payment token, to an optional connected stripe account, with an optional application fee.
+     *
+     * @throws HttpException:
+     *     - If the payment token is invalid (payment failed)
+     *
+     * @see https://stripe.com/docs/charges#saving-credit-card-details-for-later
+     *
+     * @param string $paymentToken: The payment token returned by the payment form (Stripe.js)
+     * @param string $email: An optional customer e-mail
+     *
+     * @return Charge
+     */
+    public function createCustomer($paymentToken, $email = null)
+    {
+        return Customer::create([
+            'source' => $paymentToken,
+            'email' => $email
+        ]);
+    }
+
+    /**
+     * Create a new Charge on an existing Customer object, to an optional connected stripe account, with an optional application fee
+     *
+     * @throws HttpException:
+     *     - If the payment token is invalid (payment failed)
+     *
+     * @see https://stripe.com/docs/charges#saving-credit-card-details-for-later
+     *
+     * @param int    $chargeAmount: The charge amount in cents
+     * @param string $chargeCurrency: The charge currency to use
+     * @param string $customerId: The Stripe Customer object ID
+     * @param string $stripeAccountId: The connected stripe account ID
+     * @param int    $applicationFee: The fee taken by the platform, in cents
+     * @param string $description: An optional charge description
+     * @param array  $metadata: An optional array of metadatas
+     *
+     * @return Charge
+     */
+    public function chargeCustomer($chargeAmount, $chargeCurrency, $customerId, $stripeAccountId = null, $applicationFee = 0, $chargeDescription = '', $chargeMetadata = [])
+    {
+        $chargeOptions = [
+            'amount'            => $chargeAmount,
+            'currency'          => $chargeCurrency,
+            'customer'          => $customerId,
+            'description'       => $chargeDescription,
+            'metadata'          => $chargeMetadata
         ];
 
         if ($applicationFee && intval($applicationFee) > 0) {
@@ -141,20 +205,21 @@ class StripeClient extends Stripe
      *     - If the charge id is invalid (the charge does not exists...)
      *     - If the charge has already been refunded
      *
-     * @see https://stripe.com/docs/subscriptions/tutorial#create-subscription
+     * @see https://stripe.com/docs/connect/direct-charges#issuing-refunds
      *
      * @param string $chargeId: The charge ID
      * @param int    $refundAmount: The charge amount in cents
-     * @param array  $metadata: optionnal additional informations about the refund
+     * @param array  $metadata: optional additional informations about the refund
      * @param string $reason: The reason of the refund, either "requested_by_customer", "duplicate" or "fraudulent"
      * @param bool   $refundApplicationFee: Wether the application_fee should be refunded aswell.
      * @param bool   $reverseTransfer: Wether the transfer should be reversed
+     * @param string $stripeAccountId: The optional connected stripe account ID on which charge has been made.
      *
      * @return Refund
      */
-    public function refundCharge($chargeId, $refundAmount = null, $metadata = [], $reason = 'requested_by_customer', $refundApplicationFee = true, $reverseTransfer = false)
+    public function refundCharge($chargeId, $refundAmount = null, $metadata = [], $reason = 'requested_by_customer', $refundApplicationFee = true, $reverseTransfer = false, $stripeAccountId = null)
     {
-        $data = [
+        $refundOptions = [
             'charge'                    => $chargeId,
             'metadata'                  => $metadata,
             'reason'                    => $reason,
@@ -163,9 +228,15 @@ class StripeClient extends Stripe
         ];
 
         if ($refundAmount) {
-            $data['amount'] = intval($refundAmount);
+            $refundOptions['amount'] = intval($refundAmount);
         }
 
-        return Refund::create($data);
+        $connectedAccountOptions = [];
+
+        if ($stripeAccountId) {
+            $connectedAccountOptions['stripe_account'] = $stripeAccountId;
+        }
+
+        return Refund::create($refundOptions, $connectedAccountOptions);
     }
 }

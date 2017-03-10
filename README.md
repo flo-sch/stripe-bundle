@@ -98,10 +98,11 @@ $stripeClient->createCharge($chargeAmount, $chargeCurrency, $paymentToken, $stri
 /**
  * $chargeId (string)           : The Stripe charge ID (returned by Stripe when you create a charge)
  * $refundAmount (int)          : The charge amount in cents (if null, the whole charge amount will be refunded)
- * $metadata (array)            : optionnal additional informations about the refund
+ * $metadata (array)            : additional informations about the refund, default []
  * $reason (string)             : The reason of the refund, either "requested_by_customer", "duplicate" or "fraudulent"
- * $refundApplicationFee (bool) : Wether the application_fee should be refunded aswell.
- * $reverseTransfer (bool)      : Wether the transfer should be reversed
+ * $refundApplicationFee (bool) : Wether the application_fee should be refunded aswell, default true
+ * $reverseTransfer (bool)      : Wether the transfer should be reversed (when using Stripe Connect "destination" parameter on charge creation), default false
+ * $stripeAccountId (string)    : (optional) TheStripe account on which the charge has been made (Stripe Connect), default null (--> refund by the platform)
  */
-$stripeClient->refundCharge($chargeId, $refundAmount, $metadata, $reason, $refundApplicationFee, $reverseTransfer);
+$stripeClient->refundCharge($chargeId, $refundAmount, $metadata, $reason, $refundApplicationFee, $reverseTransfer, $stripeAccountId);
 ```
