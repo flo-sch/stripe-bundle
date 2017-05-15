@@ -23,7 +23,7 @@ class FloschStripeExtension extends Extension
 
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('flosch_stripe.stripe_api_key', $config['stripe_api_key']);
+        $container->setParameter('stripe_api_key', $config['stripe_api_key']);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
