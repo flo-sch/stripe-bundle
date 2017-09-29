@@ -59,6 +59,40 @@ class StripeClient extends Stripe
     }
 
     /**
+     * Retrieve a Customer instance by its ID
+     *
+     * @throws HttpException:
+     *     - If the customerId is invalid
+     *
+     * @see https://stripe.com/docs/api#customers
+     *
+     * @param string $customerId: The customer ID
+     *
+     * @return Customer
+     */
+    public function retrieveCustomer($customerId)
+    {
+        return Customer::retrieve($customerId);
+    }
+
+    /**
+     * Retrieve a Charge instance by its ID
+     *
+     * @throws HttpException:
+     *     - If the chargeId is invalid
+     *
+     * @see https://stripe.com/docs/api#charges
+     *
+     * @param string $chargeId: The charge ID
+     *
+     * @return Charge
+     */
+    public function retrieveCharge($chargeId)
+    {
+        return Charge::retrieve($chargeId);
+    }
+
+    /**
      * Associate a new Customer object to an existing Plan.
      *
      * @throws HttpException:
