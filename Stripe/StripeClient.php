@@ -116,8 +116,8 @@ class StripeClient extends Stripe
         ]);
 
         $data = [
-            'customer' => $customer->id,
-            'plan' => $planId,
+            'customer'  => $customer->id,
+            'plan'      => $planId,
         ];
 
         if ($couponId) {
@@ -127,6 +127,35 @@ class StripeClient extends Stripe
         $subscription = Subscription::create($data);
 
         return $customer;
+    }
+
+    /**
+     * Associate an existing Customer object to an existing Plan.
+     *
+     * @throws HttpException:
+     *      - If the customerId is invalid (the customer does not exists...)
+     *      - If the planId is invalid (the plan does not exists...)
+     *
+     * @see https://stripe.com/docs/api#create_subscription
+     *
+     * @param string $customerId: The customer ID as defined in your Stripe dashboard
+     * @param string $planId: The plan ID as defined in your Stripe dashboard
+     * @param array $parameters: Optional additional parameters, the complete list is available here: https://stripe.com/docs/api#create_subscription
+     *
+     * @return Subscription
+     */
+    public function subscribeExistingCustomerToPlan($customerId, $planId, $parameters = [])
+    {
+        $data = [
+            'customer'      => $customerId,
+            'plan'          => $planId
+        ];
+
+        if ($parameters && is_array($parameters)) {
+            $data = array_merge($parameters, $data);
+        }
+
+        return Subscription::create($data);
     }
 
     /**

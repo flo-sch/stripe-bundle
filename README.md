@@ -43,6 +43,64 @@ $stripeClient = $this->get('flosch.stripe.client');
 The StripeClient php class extends the default Stripe PHP SDK class, allowing you to do anything that this SDK can do.
 Plus, it will automatically be authenticated with your Stripe API Key, which you do not have to worry about at all.
 
+
+### Extends the client
+
+I will always be open to PR in order to update this project,
+However if you wish to add your own custom helpers, you can easily extend it yourself, for instance :
+
+``` php
+<?php // src/YourNamespace/YourProject/Stripe/StripeClient.php
+
+namespace YourNamespace\YourProject\Stripe;
+
+use Flosch\Bundle\StripeBundle\Stripe\StripeClient as BaseStripeClient;
+
+class StripeClient extends BaseStripeClient
+{
+    public function __construct($stripeApiKey = '')
+    {
+        parent::__construct($stripeApiKey);
+
+        return $this;
+    }
+
+    public function myOwnMethod()
+    {
+        // Do what you want here...
+    }
+}
+```
+
+Then register your extension as a service, and use it.
+
+> http://symfony.com/doc/current/service_container/3.3-di-changes.html
+
+``` yaml
+services:
+    YourNamespace\YourProject\Stripe\StripeClient:
+        autowire: true
+        autoconfigure: true
+        lazy: true
+
+    my.stripe.client:
+        alias: YourNamespace\YourProject\Stripe\StripeClient
+```
+
+``` php
+public function indexAction()
+{
+    // Retrieve it from the container with the old-school getter
+    $stripeClient = $this->get('my.stripe.client');
+}
+
+public function indexAction(\YourNamespace\YourProject\Stripe\StripeClient $stripeClient)
+{
+    // Or inject it in your controllers if you use autowiring
+    // Then you're ready to go...
+}
+```
+
 ### Helpers
 
 The StripeClient currently offers four helper methods :
@@ -53,7 +111,7 @@ The StripeClient currently offers four helper methods :
 /**
  * $planId (string)         : The existing Coupon ID (the one you define in the Stripe dashboard)
  */
-$stripeClient->retrieveCoupon($planId);
+$coupon = $stripeClient->retrieveCoupon($planId);
 ```
 
 ###### Retrieve a Plan by its ID
@@ -62,10 +120,38 @@ $stripeClient->retrieveCoupon($planId);
 /**
  * $planId (string)         : The existing Plan ID (the one you define in the Stripe dashboard)
  */
-$stripeClient->retrievePlan($planId);
+$plan = $stripeClient->retrievePlan($planId);
 ```
 
-###### Subscribe customer to an existing plan
+###### Retrieve a Customer by its ID
+
+``` php
+/**
+ * $customerId (string)         : The existing Customer ID
+ */
+$customer = $stripeClient->retrieveCustomer($customerId);
+```
+
+###### Retrieve a Charge by its ID
+
+``` php
+/**
+ * $chargeId (string)         : The existing Charge ID
+ */
+$charge = $stripeClient->retrieveCharge($chargeId);
+```
+
+###### Create a new customer
+
+``` php
+/**
+ * $paymentToken (string)   : The payment token obtained using the Stripe.js library
+ * $customerEmail (string)  : The customer e-mail address
+ */
+$stripeClient->createCustomer($paymentToken, $customerEmail);
+```
+
+###### Create and subscribe a new customer to an existing plan
 
 ``` php
 /**
@@ -75,6 +161,20 @@ $stripeClient->retrievePlan($planId);
  * $couponId (string|null)  : An optional coupon ID
  */
 $stripeClient->subscribeCustomerToPlan($planId, $paymentToken, $customerEmail, $couponId);
+```
+
+###### Subscribe an existing customer to an existing plan
+
+``` php
+/**
+ * $customerId (string)     : The existing Customer ID
+ * $planId (string)         : The existing Plan ID (the one you define in the Stripe dashboard)
+ * $parameters (array)      : An optional array of additional parameters
+ */
+$stripeClient->subscribeExistingCustomerToPlan($customerId, $planId, [
+    'coupon'        => 'TEST',
+    'tax_percent'   => 19.6
+]);
 ```
 
 ###### Create a charge (to a platform, or a connected Stripe account)
