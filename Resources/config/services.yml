@@ -4,5 +4,5 @@ parameters:
 services:
     flosch.stripe.client:
         class: "%flosch.stripe.client.class%"
-        arguments: ["%stripe_api_key%"]
+        arguments: ["%flosch_stripe.stripe_api_key%"]
         lazy: true
