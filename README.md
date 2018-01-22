@@ -1,8 +1,10 @@
 # stripe-bundle
-A symfony 3 integration for the Stripe PHP SDK
+A symfony >= 3 integration for the Stripe PHP SDK
 
 This bundle allow you to manipulate the stripe SDK as a Symfony service,
 Plus some helpers to use different Stripe API notions such as Stripe Connect or the Subscriptions API.
+
+**NOTE** : The master branch, and 1.*.* releases target Symfony 3. If you are using Symfony 4, please use the 2.0.0 branch and the 2.*.* releases of this bundle.
 
 ### Installation
 To install this bundle, run the command below and you will get the latest version from [Packagist][3].
