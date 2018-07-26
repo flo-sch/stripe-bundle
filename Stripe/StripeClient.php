@@ -200,6 +200,41 @@ class StripeClient extends Stripe
     }
 
     /**
+     * Create a new Destination Charge from a payment token, to a connected stripe account, with an application fee.
+     *
+     * @throws HttpException:
+     *     - If the payment token is invalid (payment failed)
+     *
+     * @see https://stripe.com/docs/connect/destination-charges
+     *
+     * @param int    $chargeAmount: The charge amount in cents
+     * @param string $chargeCurrency: The charge currency to use
+     * @param string $paymentToken: The payment token returned by the payment form (Stripe.js)
+     * @param string $stripeAccountId: The connected stripe account ID
+     * @param int    $applicationFee: The fee taken by the platform, in cents
+     * @param string $chargeDescription: An optional charge description
+     * @param array  $chargeMetadata: An optional array of metadatas
+     *
+     * @return Charge
+     */
+    public function createDestinationCharge($chargeAmount, $chargeCurrency, $paymentToken, $stripeAccountId, $applicationFee, $chargeDescription = '', $chargeMetadata = [])
+    {
+        $chargeOptions = [
+            'amount'            => $chargeAmount,
+            'currency'          => $chargeCurrency,
+            'source'            => $paymentToken,
+            'description'       => $chargeDescription,
+            'metadata'          => $chargeMetadata,
+            'destination'       => [
+                'amount' => $chargeAmount - $applicationFee,
+                'account' => $stripeAccountId
+            ]
+        ];
+
+        return Charge::create($chargeOptions);
+    }
+
+    /**
      * Create a new Charge from a payment token, to an optional connected stripe account, with an optional application fee.
      *
      * @throws HttpException:
