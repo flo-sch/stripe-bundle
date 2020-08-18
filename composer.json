@@ -1,5 +1,5 @@
 {
-    "name": "flosch/stripe-bundle",
+    "name": "bartpie/stripe-bundle",
     "type": "symfony-bundle",
     "description": "Symfony 3 bundle to easily integrate Stripe's webpayment SDK into a Symfony project.",
     "keywords": [
