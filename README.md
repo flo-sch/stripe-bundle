@@ -1,5 +1,12 @@
-# stripe-bundle
+# flosch/stripe-bundle
 A symfony >= 3 integration for the Stripe PHP SDK
+
+## ⚠️ IMPORTANT: Before you use this bundle... ⚠️
+
+Some (rather big!) changes are [coming quite soon](https://support.stripe.com/questions/strong-customer-authentication-sca-enforcement-date) affecting online payment solutions in Europe, impacting the Stripe APIs used by this bundle.
+[Read this issue carefully](https://github.com/flo-sch/stripe-bundle/issues/15) before using this bundle.
+
+## Description
 
 This bundle allow you to manipulate the stripe SDK as a Symfony service,
 Plus some helpers to use different Stripe API notions such as Stripe Connect or the Subscriptions API.
